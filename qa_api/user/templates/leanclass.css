@@ -1,0 +1,82 @@
+.station{
+    width:150px;
+    background-color: #e2e2e2;
+    float: left;
+    margin: 5px 10px 5px 2px;
+    height: 50px;
+    padding: 5px;
+    border-radius: 5px;
+}
+.arrow{
+    color: #2196f3;
+    float: left;
+    margin-top: 5px;
+}
+.queue{
+    float:left;
+    border:1px ;
+    border-color: #2196f3;
+    border-style: dashed;
+
+    padding: 2px 5px;
+}
+.calcNum{
+    color: red;
+    font-size:1.2em;
+}
+.inpV{
+    width:30px;
+}
+
+.totalout{
+    border-style: groove;
+    height:50px;
+    border-radius: 5px;
+    margin-top:0px;
+}
+
+.my-class {
+    background-color: #ffbbbb;
+}
+
+.nullclass {
+    background-color: #c8c8ff;
+}
+
+@font-face {
+	font-family: 'BuxtonSketch';
+	src: url('./BuxtonSketch.eot');
+	src: local('BuxtonSketch'), url('./BuxtonSketch.woff') format('woff'), url('./BuxtonSketch.ttf') format('truetype');
+}
+/* use this class to attach this font to any element i.e. <p class="fontsforweb_fontid_1049">Text with this font applied</p> */
+.fontsforweb_fontid_1049 {
+	font-family: 'BuxtonSketch' !important;
+}
+
+.button{
+  color: #fff;
+  background-color: #428bca;
+  border-color: #357ebd;
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 2px;
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+@font-face {
+    font-family: "bastardilla";
+    src: url(bastardilla-FFP.ttf);
+}
+
+.disableButton{
+  background-color: grey;
+}

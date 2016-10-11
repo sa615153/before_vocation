@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block layoutstyles %}
+<link href="/user/static/css/layout.css" rel="stylesheet" type="text/css">
+{% endblock %}
+
+
+
+
+{% block layout %}
+  <div id="head" >
+      <a id="logo" href="{{ url_for('user.index') }}">Test-Service-System</a>
+      <div id="navigation">
+          <a href="{{ url_for('user.index') }}">Index</a>
+          {% if not current_user.is_authenticated %}
+          | <a href="{{ url_for('user.login') }}">Log in</a>
+          or <a href="http://signup">Sign up</a>
+          {% else %}
+          | <a href="{{ url_for('user.AddNewTask') }}">Add New Task</a>
+          | <a href="{{ url_for('user.logout') }}">Logout</a>
+
+          {% endif %}
+      </div>
+  </div>
+  <hr>
+
+
+{% endblock %}
+

@@ -1,73 +1,71 @@
+{% extends "layout.html" %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/fixes.html" as fixes %}
+{% import "bootstrap/utils.html" as util %}
+
+{% block title %} Well Done {% endblock %}
+{% block html_attribs %} lang="en" {% endblock %}
+{% block head%}
+
+{% block metas %}
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="">
   <meta name="author" content="">
   <link rel="icon" href="test_tube.ico">
+{% endblock %}
 
-  <title>Signin Well Done</title>
+{% block styles%}
+<link href="{{ url_for('user.static',filename='css/lib/bootstrap.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ url_for('user.static',filename='css/signin.css') }}" rel="stylesheet" type="text/css">
 
-  <!-- Bootstrap core CSS -->
-  <!--link href="{{ url_for('static',filename='css/lib/bootstrap.min.css') }}" rel="stylesheet" type="text/css"-->
+{% endblock %}
 
-  <link href="static/css/lib/bootstrap.min.css" rel="stylesheet" type="text/css">
-  <!-- Custom styles for this template -->
-  <link href="static/css/signin.css" rel="stylesheet" type="text/css">
+<link href="{{ url_for('user.static',filename='img/test_tube.ico') }}" rel="icon">
+{% endblock %}
 
-  <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-  <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+{% block scripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+{% endblock%}
 
-  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
-      <![endif]-->
-      <script>
-      function InputValidateCheck()
-      {
+{% block content %}
 
-        if(Loginform.username.value == "")
-        {
-          document.getElementById("login-warning").innerHTML = "Please input your username!";
-          Loginform.username.focus();
-          return(false);
-        }
-        if(Loginform.password.value == "")
-        {
-          document.getElementById("login-warning").innerHTML = "Please input your password!";
-          Loginform.username.focus();
-          return(false);
-        }
-      }
-      </script>
-    </head>
+<div id="login">
 
-    <body>
+  <form class="form-signin" method="post" name="Loginform" role="form" >
+    <h2 class="form-signin-heading">Please sign in</h2>
+    <div id="login-warning"></div>
+    {{ form.hidden_tag() }}
+    <p>
+      {{ form.userName(class="form-control", placeholder="User Name")}}
+      {{ form.passWord(class="form-control", placeholder="Password")}}
 
-      <div class="container">
+      <!--flash-->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+    {% for message in messages %}
+        <li>{{ message }} </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
 
-        <form class="form-signin" method="post" name="Loginform" role="form" >
-          <h2 class="form-signin-heading">Please sign in</h2>
-          <div id="login-warning"></div>
-            <input type="text" id="username" name="username" class="form-control" placeholder="User Name" required autofocus>
-            <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" value="remember-me"> Remember me
-              </label>
-            </div>
+      {{ form.submit(style="width:140px;float: right;", class="btn btn-lg btn-primary btn-block", id="login-btn", onclick="InputValidateCheck(this)", value="Sign in")}}
+    </p>
+    <!--input type="text" id="username" name="username" class="form-control" placeholder="User Name" required autofocus>
+    <!--input type="password" id="password" name="password" class="form-control" placeholder="Password" required-->
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" value="remember-me"> Remember me
+      </label>
+    </div>
             <!--input class="btn btn-lg btn-primary btn-block" type="submit"-->
-            <input style="width:140px;float: right;" class="btn btn-lg btn-primary btn-block" type="submit" id="login-btn" name="submit" onclick="InputValidateCheck(this)"value="Sign in"  />
+    <!--input style="width:140px;float: right;" class="btn btn-lg btn-primary btn-block" type="submit" id="login-btn" name="submit" onclick="InputValidateCheck(this)" value="Sign in" -->
 
-        </form>
+  </form>
+</div> <!-- /container -->
+{% endblock %}
 
-      </div> <!-- /container -->
-
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
-      <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    </body>
-    </html>

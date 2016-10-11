@@ -11,5 +11,8 @@ class UserAddTaskForm(Form):
 class UserLoginForm(Form):
     userName = StringField(u'username', validators=[DataRequired(), length(4.50)])
     passWord = PasswordField(u'password', validators= [DataRequired()])
+    submit = SubmitField(u'login')
+
+
 
 

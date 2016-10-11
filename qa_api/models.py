@@ -1,13 +1,5 @@
 # -*- coding: utf-8 -*-
-
-from sqlalchemy import Column
-from sqlalchemy import Integer
-from sqlalchemy import String
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-
-from sqlalchemy.ext.declarative import declared_attr
-
+from qa_api import login_manager
 from sqlalchemy import Column
 from sqlalchemy import Integer
 from sqlalchemy import String
@@ -18,8 +10,8 @@ from sqlalchemy.orm import sessionmaker
 from apiconfig import DB_URI_local
 from apiconfig import DB_URI_linux
 from sqlalchemy import create_engine
-
-
+from flask_login import UserMixin
+from database import Session
 
 Base = declarative_base()
 
@@ -27,10 +19,17 @@ class MyMixin(object):
     __table_args__ = {'mysql_engine': 'InnoDB'}
 
 
-class User(MyMixin,Base):
+class User(UserMixin,Base,MyMixin):
     __tablename__ = 'User'
     user_name = Column('username', String(30),primary_key=True,nullable=False)
     password = Column('password', String(20),nullable=False)
+
+    @property
+    def __repr__(self):
+        return '<User %r>' % (self.name)
+
+    def get_id(self):
+        return unicode(self.user_name)
 
 class Machine(MyMixin, Base):
     __tablename__ = 'Machines'
@@ -101,7 +100,12 @@ class SubtaskNameProperty(MyMixin, Base):
          % (self.subtask_name, self.label, self.need_benchmark, self.need_assistant_git_dir)
 
 
-
+@login_manager.user_loader
+def load_user(user_id):
+    session=Session()
+    user=session.query(User).get(user_id)
+    session.commit();
+    return user
 
 if __name__ == "__main__":
     from sqlalchemy import create_engine

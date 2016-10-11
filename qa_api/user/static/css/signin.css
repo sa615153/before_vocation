@@ -1,9 +1,17 @@
 body {
-  padding-top: 40px;
-  padding-bottom: 40px;
+  padding-top: 0px;
+  padding-bottom: 10px;
   background-color: #eee;
+  margin:0px;
 }
-
+#login{
+margin-top:5em;
+margin-left:20em;
+margin-right:20em;
+margin-bottom:5em;
+padding-bottom:5em;
+background-color: #fff;
+}
 .form-signin {
   max-width: 330px;
   padding: 15px;

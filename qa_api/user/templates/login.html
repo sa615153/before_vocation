@@ -11,7 +11,14 @@
 {% block metas %}
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<!--允许网页宽度自动调整-->
+<!--viewport是网页默认的宽度和高度，上面这行代码的意思是，网页宽度默认等于屏幕宽度（width=device-width），
+原始缩放比例（initial-scale=1）为1.0，即网页初始大小占屏幕面积的100%-->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
   <meta name="description" content="">
   <meta name="author" content="">
   <link rel="icon" href="test_tube.ico">
@@ -54,7 +61,7 @@
     {% endwith %}
 
       {{ form.submit(style="width:140px;float: right;", class="btn btn-lg btn-primary btn-block", id="login-btn", onclick="InputValidateCheck(this)", value="Sign in")}}
-    </p>
+
     <!--input type="text" id="username" name="username" class="form-control" placeholder="User Name" required autofocus>
     <!--input type="password" id="password" name="password" class="form-control" placeholder="Password" required-->
     <div class="checkbox">
@@ -62,6 +69,8 @@
         <input type="checkbox" value="remember-me"> Remember me
       </label>
     </div>
+    </p>
+
             <!--input class="btn btn-lg btn-primary btn-block" type="submit"-->
     <!--input style="width:140px;float: right;" class="btn btn-lg btn-primary btn-block" type="submit" id="login-btn" name="submit" onclick="InputValidateCheck(this)" value="Sign in" -->
 

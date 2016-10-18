@@ -5,6 +5,6 @@ from apiconfig import DB_URI_linux
 
 Session = sessionmaker(autocommit=False,
                        autoflush=False,
-                       bind=create_engine(DB_URI_linux))
+                       bind=create_engine(DB_URI_linux,echo=False))
 
 

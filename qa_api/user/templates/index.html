@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block head%}
+{% block metas %}
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="jpang3">
+  <link rel="icon" href="test_tube.ico">
+{% endblock %}
+
+{% block styles%}
+<link href="{{ url_for('user.static',filename='css/lib/bootstrap.css') }}" rel="stylesheet" type="text/css">
+
+{% endblock %}
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock%}
+
+{% block content %}
+<div id="addpanel">
+    <a href="{{url_for('user.addideas',username=name,category='ideas')}}">add ideas</a>
+    <a href="{{url_for('user.addiar',username=name,category='iar')}}">add iar</a>
+</div>
+{% endblock %}
+
+

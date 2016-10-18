@@ -4,14 +4,29 @@ body {
   background-color: #eee;
   margin:0px;
 }
+
+
 #login{
+display: block;
+
 margin-top:5em;
 margin-left:20em;
 margin-right:20em;
 margin-bottom:5em;
+
 padding-bottom:5em;
+padding-right: 10em;
+padding-left:10em;
+
 background-color: #fff;
+
+width = 500px;
 }
+
+
+
+
+
 .form-signin {
   max-width: 330px;
   padding: 15px;

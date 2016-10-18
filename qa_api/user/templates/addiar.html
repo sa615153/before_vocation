@@ -1,0 +1,114 @@
+{% extends "layout.html" %}
+
+{% block head%}
+{% block metas %}
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="test_tube.ico">
+{% endblock %}
+
+{% block styles%}
+<link href="{{ url_for('user.static',filename='css/lib/bootstrap.css') }}" rel="stylesheet" type="text/css">
+<link href="/user/static/css/addiar.css" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock%}
+
+{% block content %}
+<div id="addiar" class="addpanel">
+    <form class="form-addideas" method="post" name="form-addiar" role="form" >
+        <!-- solve validate_on_submit false -->
+        {{ form.hidden_tag() }}
+        <p>&nbsp</p>
+        <h2 class="form-signin-heading">please input task information</h2>
+        <p>&nbsp</p>
+        <div class="input">
+            <p class="regular">
+
+                {{form.title.label}}{{form.title(class = "subtaskcheckbox")}}
+            <!--验证过程出错信息-->
+                {% for error in form.errors.title %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}<br>
+                <br>
+
+                {{form.gitDir.label}}{{form.gitDir(class = "subtaskcheckbox")}}
+            <!--验证过程出错信息-->
+                {% for error in form.errors.gitDir %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}<br>
+
+                <br>
+
+                {{form.comments.label}}{{form.comments(class = "subtaskcheckbox")}}
+            <!--验证过程出错信息-->
+                {% for error in form.errors.comments %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}<br>
+
+                <br>
+
+            </p>
+
+            <p class="subtasks">
+                <!--subtasks of ideas, fixed-->
+                {{form.check_code_quality(class = "subtaskcheckbox")}}{{form.check_code_quality.label}}
+            <!--验证过程出错信息-->
+                {% for error in form.errors.check_code_quality %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}<br>
+
+                <br>
+
+                {{form.check_compile_win_intel(class = "subtaskcheckbox")}}{{form.check_compile_win_intel.label}}
+            <!--验证过程出错信息-->
+                {% for error in form.errors.check_compile_win_intel %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}<br>
+
+                <br>
+                {{form.check_compile_win_vc(class = "subtaskcheckbox")}}{{form.check_compile_win_vc.label}}
+            <!--验证过程出错信息-->
+                {% for error in form.errors.check_compile_win_vc %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}<br>
+
+                <br>
+                {{form.check_linux_compile(class = "subtaskcheckbox")}}{{form.check_linux_compile.label}}
+            <!--验证过程出错信息-->
+                {% for error in form.errors.check_linux_compile %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}<br>
+
+                <br>
+
+
+
+            </p>
+
+
+        <!--flash-->
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <ul class="messages">
+            {% for message in messages %}
+                <li>{{ message }} </li>
+            {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+
+        {{ form.submit(style="width:140px;float: right;", class="btn btn-lg btn-primary btn-block", class="submit", value="submit") }}
+
+        </div>
+
+    </form>
+
+</div>
+{% endblock %}

@@ -26,13 +26,16 @@
   </head>
   <body {% block body_attribs %}{% endblock body_attribs %} >
     {% block body -%}
-    <div class="container">
+
     {% block navbar %}
     {%- endblock navbar %}
 
     {% block layout -%}
     {%- endblock layout %}
 
+
+
+    <div class="container" id="basediv" >
 
     {% block content -%}
     {%- endblock content %}

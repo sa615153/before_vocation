@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+
+
+    <h1>when submit, how form datas act and how forms datas act</h1>
+    <form action="/user/test" method="post" name="test">
+        {{form1.hidden_tag()}}
+        <p>
+            input1 of form1<br>
+            {{form1.input1}}<br>
+            <!--验证过程出错信息-->
+            {% for error in form1.errors.input1 %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}<br>
+        </p>
+        <p>
+            input2 of form1:<br>
+            {{ form1.input2 }}<br>
+            <!--验证过程出错信息-->
+            {% for error in form1.errors.input2 %}
+            <span style="color: red;">[{{ error }}]</span>
+            <p>in_for</p>
+            {% endfor %}<br>
+        </p>
+
+        <p id = "not_any_form">not any form<br>
+            <input id="out_input1" type="text">this is out_input1<br>
+            <input id ="out_input2" name="out_input2name" type="text">this is out_input2
+        </p>
+        <br>
+
+
+        <hr>
+        <p id="form2">
+            form2 contents<br>
+            <p>
+            input3 of form2<br>
+            {{form2.input3}}<br>
+            <!--验证过程出错信息-->
+            {% for error in form2.errors.input3 %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}<br>
+
+            <p>
+                input4 of form2<br>
+                {{form2.input4}}<br>
+                <!--验证过程出错信息-->
+                {% for error in form2.errors.input4 %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}<br>
+            </p>
+
+            <p>
+                input5 of form2<br>
+                {{form2.input5}}<br>
+                <!--验证过程出错信息-->
+                {% for error in form2.errors.input5 %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}<br>
+            </p>
+
+        </p>
+        <hr>
+        <p>
+            submit of form1:<br>
+            {{form1.submit}}
+        </p>
+    </form>
+
+
+</head>
+<body>
+
+</body>
+</html>

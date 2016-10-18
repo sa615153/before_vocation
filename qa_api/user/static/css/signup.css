@@ -1,0 +1,29 @@
+body {
+  padding-top: 0px;
+  padding-bottom: 10px;
+  background-color: #eee;
+  margin:0px;
+}
+
+
+#basediv{
+display: block;
+
+margin-top:2em;
+
+margin-bottom:5em;
+
+text-align: center;
+padding-bottom:5em;
+padding-right: 10em;
+padding-left:10em;
+width = 800px;
+
+background-color: #fff;
+
+}
+
+
+div#basediv {
+    width: 800px;
+}

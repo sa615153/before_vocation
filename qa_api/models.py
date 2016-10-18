@@ -40,7 +40,7 @@ class Machine(MyMixin, Base):
     label = Column('machine_label', String(50), nullable=False)
 
     def __repr__(self):
-        return "<machine(IPAddress = '%s', machine status = '%s', label = '%s')>" \
+        return "<machine(IPAddress = '%s', machine status = '%s', label = '%s')>\n" \
                % (self.IP, self.status, self.label)
 
 class MajorTask(MyMixin,Base):
@@ -68,30 +68,41 @@ class MajorTask(MyMixin,Base):
 
 class SubTask(MyMixin, Base):
     __tablename__ = 'Subtasks'
+    id = Column('id',Integer,primary_key=True,)
+
+
+    major_task_track_number = Column('tracknumber', String(100), ForeignKey('Tasks.tracknumber'), nullable=False)
     MajorTask = relationship("MajorTask", back_populates="subtasks")
 
-    major_task_track_number = Column('tracknumber', String(100), ForeignKey('Tasks.tracknumber'), primary_key=True, nullable=False)
-    name = Column('subtask_name', String(50), primary_key=True, nullable=False)
+    name = Column('subtask_name', String(50), ForeignKey('Subtask_properties.subtask_name'), nullable=False)
+    property = relationship("SubtaskProperty", back_populates="subtasks")
+
     status = Column('current_status', Integer, nullable=False)
     benchmark = Column('benchmark', String(100), default=None)
     running_machine = Column('running_machine', String(30), default=None)
     assistant_git_dir = Column('assistant_gitDir', String(50), default=None)
     result = Column('result', String(10), default="unknown")
+    # backup_path = Column('backup_path', String(100))
+
 
 
 
     def __repr__(self):
-        return "<subtask(major_task_track_number = '%s', name = '%s',status = '%s', benchmark = '%s', running_machine = '%s', \
-        assistant_git_dir = '%s')>"\
-         % (self.major_task_track_number, self.name, self.status, self.benchmark, self.running_machine, self.assistant_git_dir)
+        return "<subtask(id = '%s'major_task_track_number = '%s', name = '%s',status = '%s', benchmark = '%s', running_machine = '%s',\
+assistant_git_dir = '%s')>\n"\
+         % (self.id,self.major_task_track_number, self.name, self.status, self.benchmark, self.running_machine, self.assistant_git_dir)
 
-class SubtaskNameProperty(MyMixin, Base):
+class SubtaskProperty(MyMixin, Base):
     __tablename__ = 'Subtask_properties'
 
     subtask_name = Column('subtask_name', String(50), primary_key=True, nullable=False)
     label = Column('available_machine_label', String(50), nullable=False)
     need_benchmark = Column('needBenchmark', Integer, nullable=False)
     need_assistant_git_dir =Column('needAssitantGitDir', Integer, default=None)
+    task_category = Column('task_category', String(20), nullable=True)
+    precondition = Column('precondition', String(50))
+
+    subtasks = relationship("SubTask", back_populates="property")
 
 
     def __repr__(self):

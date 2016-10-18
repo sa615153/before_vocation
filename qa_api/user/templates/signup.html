@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+
+{% block head%}
+{% block metas %}
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="jpang3">
+  <link rel="icon" href="test_tube.ico">
+{% endblock %}
+
+{% block styles%}
+<link href="{{ url_for('user.static',filename='css/lib/bootstrap.css') }}" rel="stylesheet" type="text/css">
+<link href="/user/static/css/signup.css" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+/*
+    function validate_passwords()
+    {
+        var pwd1 = document.getElementById("pwd1").value;
+        var pwd2 = document.getElementById("pwd2").value;
+        if(pwd1==pwd2){
+            return true;
+        }else{
+            document.getElementById("pwdsinfo").innerHTML = "not equal!"
+            return false
+        }
+    }
+*/
+</script>
+{% endblock%}
+
+{% block content %}
+<div id="signup">
+    <!--huawei eye of pwd-->
+    <form class="form-signup" method="post" name="Signupform" role="form" onsubmit="return validate_passwords()">
+        <!-- solve validate_on_submit false -->
+        {{ form.hidden_tag() }}
+        <p>&nbsp</p>
+        <h2 class="form-signin-heading">Register: name and password</h2>
+        <p>&nbsp</p>
+        <p id="input">
+            {{ form.userName(class="form-control", placeholder="User Name")}}
+
+            <!--验证过程出错信息-->
+            {% for error in form.errors.userName %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}<br>
+
+            <br>
+            {{ form.passWord(class="form-control", placeholder="Password", id="pwd1")}}
+
+            <!--验证过程出错信息-->
+            {% for error in form.errors.passWord %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}<br>
+
+            <br>
+            {{ form.confirm_passWord(class="form-control", placeholder="confirm password", id="pwd2")}}
+            <!--验证过程出错信息-->
+            {% for error in form.errors.confirm_passWord %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}<br>
+
+
+              <!--flash-->
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <ul id="messages">
+            {% for message in messages %}
+                <li>{{ message }} </li>
+            {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+
+            <p id="pwdsinfo">&nbsp</p>
+
+
+            {{ form.submit(style="width:140px;float: right;", class="btn btn-lg btn-primary btn-block", id="login-btn", value="Sign up") }}
+
+
+        </p>
+
+    </form>
+</div>
+
+{% endblock %}

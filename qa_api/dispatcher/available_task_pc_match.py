@@ -11,7 +11,7 @@ from flask_restful import marshal_with
 from qa_api.models import MajorTask
 from qa_api.models import Machine
 from qa_api.models import SubTask
-from qa_api.models import SubtaskNameProperty
+from qa_api.models import SubtaskProperty
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 
@@ -31,103 +31,124 @@ parser.add_argument('status', type=str)
 
 
 class AvailableTaskPCMatch(Resource):
+    def check_precondition_status(self,subtask):
+
+        precondition = subtask.property.precondition
+
+        if precondition == 'no':
+            return True
+        for isubtask in subtask.MajorTask.subtasks:
+            if isubtask.name == precondition and isubtask.status == 2 and isubtask.result == 'success':
+                return True
+            else:
+                return False
+
     def get(self):
-        # 创建独立session,为互斥使用
+        # 创建独立session,为互斥使用,贯彻整个get
         session = Session()
+
+        # 将来要返回给dispatcher的初始“任务-机器”对 列表
+        return_list = []
 
         ############################################
         ###lock using table machine
         ############################################
 
-        #空闲windows机器列表
-        idle_quality_machines = session.query(Machine).with_lockmode('update').filter(Machine.status == 0,
-                                                                                      Machine.label == 'windows').all()
+        # find idle machines
+        idle_machine_list = session.query(Machine).with_lockmode('update').filter(Machine.status == '0').all()
 
-        # 空闲linux机器列表
-        idle_linux_compile_machines = session.query(Machine).with_lockmode('update').filter(Machine.status == 0,
-                                                                                            Machine.label == 'linux').all()
+        # print (idle_machine_list)
+        # find conclusion report type subtasks in subtask table
+        conclusion_report_list = session.query(SubTask).filter(SubTask.name == 'report').all()
+        # print "123"
+        # filter to figure out all windows machines to do report in idle machine list
+        available_doreport_machine_list = filter(lambda x: True if x.label == 'windows' else False, idle_machine_list)
 
+        # assign reports to idle windows machines
+        for ival in range(0, len(conclusion_report_list) - 1):
+            if ival < len(available_doreport_machine_list):
+                return_list.append((conclusion_report_list[ival], available_doreport_machine_list[ival]))
+                # remove target machine cos it has been assigned to do report
+                idle_machine_list.remove(available_doreport_machine_list[ival])
+                # end of report subtask assginment
 
-        #机器状态
-        machine_dict = {'windows': idle_quality_machines, 'linux': idle_linux_compile_machines}
+        # find to do subtasks
+        todo_list = session.query(SubTask).filter(SubTask.status == 0).filter(SubTask.name != 'report').all()
 
-        #空闲任务（todo doing）
-        idle_task_list = session.query(MajorTask).filter(
-            or_(MajorTask.status == 0, MajorTask.status == 1)).all()
-        print("type of idle_task_list %s"%type(idle_task_list))
-        def sub_is_todo(x):
-            if x.status == 0:
-                return True
-            else:
-                return False
+        # no_report_todo_list = filter(lambda x: True if x.name == "report" else False,todo_list)
+        # filter machine label list
+        machine_label_list = set([])
+        for machine in idle_machine_list:
+            machine_label_list.add(machine.label)
+        # contains machines in each label, such as {linux:[machine1,machine2],windows:[machine3,machin4]}
+        idle_machine_dict = {}
+        for machine_label in machine_label_list:
+            buf_list = filter(lambda x: True if x.label == machine_label else False, idle_machine_list)
+            idle_machine_dict[machine_label] = buf_list
+        # print idle_machine_dict
 
-        def find_match(machine_dict):
-            for major_task in idle_task_list:
-                for subtask in filter(sub_is_todo, major_task.subtasks):
-                    subtask_machine_label = session.query(SubtaskNameProperty).filter(SubtaskNameProperty.subtask_name == subtask.name).all()
-                    print("subtask_machine_label:%s" %type(subtask_machine_label[0]))
-                    subtask_property=subtask_machine_label[0]
-                    #print("KLKLK:%s" %temp.label)
-                    if len(machine_dict[subtask_property.label]) == 0:  # this label no machine
-                        continue
-                    else:
-                        target_machine = machine_dict[subtask_property.label].pop()  # get the target machine
-                        print("target::::%s"%target_machine)
-                        return (subtask, target_machine)
-            return 0
+        priority_list = [0, 1, 2]
 
-        find_match_result = find_match(machine_dict)
+        for machine_label in machine_label_list:
+            for priority in priority_list:
+                flag = 'nobreak'
+                target_subtask_list = filter(
+                    lambda x: True if x.property.label == machine_label and x.MajorTask.is_test2 == priority else False,
+                    todo_list)
+                target_subtask_list = filter(self.check_precondition_status, target_subtask_list)
+                print ("second layer for     label:", machine_label, "priority:", priority)
+                print "target subtasks"
+                print(target_subtask_list)
+                print "machines of this label"
+                print idle_machine_dict[machine_label]
 
-        if find_match_result != 0:  # get available task machine match success
-            '''
-            # change the database
-            # change the subtask.status from 0 to 1(todo to doing)
-            # set subtask.machine_name with the target_machine.hostname
-            # change the target_machine.machine_status from 0 to 1(idle to busy)
-            # change MajorTask.status,,,before 0 now 1(todo to doing),,,before 1 now 1 or 2(doing to doing or done)
-            '''
-
-
-            # find_match_result[0].subtask_status = 1
-            # find_match_result[0].machine_name = find_match_result[1].hostname
-            # find_match_result[1].machine_status = 1
-            #
-            # cur_major = find_match_result[0].MajorTask
-            #
-            # if cur_major.task_status == 0:#before the Majortask is todo,change it to doing
-            #     cur_major.task_status = 1
-            #
-            # elif cur_major.task_status == 1:#before the Majortask is doing, it is doing
-            #     cur_major.task_status = 1#do nothing   password
-
-            ############################################
-            ###unlock using table machine
-            ############################################
-
-            # time.sleep(10)
-
-            session.commit()
-            subtask_list = find_match_result[0]
-            machine_list = find_match_result[1]
-            print("find***:%s"%find_match_result[0])
-            print
-            return {"task name:": subtask_list.major_task_track_number,
-                   "subtask_type:": subtask_list.name,
-                   "machine:": machine_list.IP}
-
-        else:  # find_match_result == 0
-
-            ############################################
-            ###unlock using table machine
-            ############################################
-
-            session.commit()
-
-            return {"task name:": None, "subtask_type:": None,
-                   "machine:": None}
+                # distribute subtasks to machines
+                # 问题是过早改掉了machinelist，　需在第三层内部machinelist保持不变，第三层ｆｏｒ结束后，维护machinelist，
 
 
+                # bug fix
+                assigned_machine_list = ([])
+                print "before third for"
 
+                for ival in range(0, len(target_subtask_list)):
+                    machine_length = len(idle_machine_dict[machine_label])
+                    if ival < machine_length:
+                        print ('length:target_subtask_list------', len(target_subtask_list))
+                        print ('length:idle_machine_dict[machine_label]------', len(idle_machine_dict[machine_label]))
+                        print ("ival: ", ival)
+                        print "---------------------------------------------------------------------------------------------------------------------------------"
+                        print ("assign ", target_subtask_list[ival], " to ", idle_machine_dict[machine_label][ival])
+                        print "--------------------------------------assign end--------------------------------------------------"
+                        return_list.append((target_subtask_list[ival], idle_machine_dict[machine_label][ival]))
+                        # bug fix cancel this
+                        # idle_machine_dict[machine_label].remove(idle_machine_dict[machine_label][ival])
+
+                        # bug fix
+                        assigned_machine_list.append(idle_machine_dict[machine_label][ival])
+
+
+                    else:  # run out machines of this label, need to jump out this assign for and outer priority for to continue next label
+                        flag = 'break'
+                        print ("break  ival=", ival)
+                        print "run out machines of this label"
+                        print "after this second for, the return_list is :"
+                        print return_list
+                        break
+                # bug fix : maintain machines of this label
+                for i in assigned_machine_list:
+                    idle_machine_dict[machine_label].remove(i)
+
+                if flag == 'break':
+                    break
+        print "********************************************"
+        # print return_list
+        return_dict = {}
+        for t in return_list:
+            return_dict[t[1].IP] = t[0]
+        print return_dict
+
+        session.commit()
+        return return_dict
 
 
 
